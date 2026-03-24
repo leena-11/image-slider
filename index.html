@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Welcome Image Slider</title>
+
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color: white;
+    overflow: hidden;
+}
+
+/* BUTTON */
+button {
+    padding: 12px 28px;
+    margin: 10px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    background: linear-gradient(135deg, #ffffff, #e0e0e0);
+    font-size: 16px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+button:hover {
+    background: linear-gradient(135deg, #ffeb3b, #ffc107);
+    transform: translateY(-4px);
+}
+
+/* WELCOME */
+.welcome {
+    width: 100%;
+    height: 100vh;
+    background-image: url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee");
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.welcome::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+}
+.welcome * {
+    position: relative;
+    z-index: 1;
+}
+
+/* BG BLUR */
+.bg {
+    position: fixed;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    filter: blur(15px);
+    z-index: -1;
+}
+
+/* SLIDER PAGE */
+.slider-page {
+    display: none;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+/* SLIDER */
+.slider {
+    width: 500px;
+    height: 300px;
+    border-radius: 15px;
+    overflow: hidden;
+    background: black;
+}
+.slider img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* CAPTION */
+#caption {
+    margin-top: 10px;
+}
+
+/* CONTROLS */
+.controls {
+    margin-top: 15px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- WELCOME -->
+<div class="welcome" id="welcome">
+    <h1>Welcome to Image Gallery</h1>
+    <p>Click below to start</p>
+
+    <button onclick="startSlider()">View Images</button>
+    <button onclick="exitApp()">Exit</button>
+</div>
+
+<!-- BG -->
+<div class="bg" id="bg"></div>
+
+<!-- SLIDER -->
+<div class="slider-page" id="sliderPage">
+    <h2>Image Slider</h2>
+
+    <div class="slider">
+        <img id="sliderImage">
+    </div>
+
+    <div id="caption"></div>
+
+    <div class="controls">
+        <button onclick="prevImage()">Previous</button>
+        <button onclick="nextImage()">Next</button><br>
+        <button onclick="goBack()">Back</button>
+    </div>
+</div>
+
+<script>
+let images = [
+    "https://picsum.photos/id/1015/800/500",
+    "https://picsum.photos/id/1016/800/500",
+    "https://picsum.photos/id/1018/800/500",
+    "https://picsum.photos/id/1020/800/500",
+    "https://picsum.photos/id/1024/800/500"
+];
+
+let captions = [
+    "Mountain View",
+    "Nature Scene",
+    "Forest Path",
+    "Lake View",
+    "Cute Puppy"
+];
+
+let index = 0;
+let interval;
+
+let sliderImage = document.getElementById("sliderImage");
+let bg = document.getElementById("bg");
+let caption = document.getElementById("caption");
+
+function startSlider() {
+    document.getElementById("welcome").style.display = "none";
+    document.getElementById("sliderPage").style.display = "flex";
+
+    showImage();
+    interval = setInterval(nextImage, 5501);
+}
+
+function showImage() {
+    sliderImage.src = images[index];
+    bg.style.backgroundImage = `url(${images[index]})`;
+    caption.innerText = captions[index];
+}
+
+function nextImage() {
+    index = (index + 1) % images.length;
+    showImage();
+}
+
+function prevImage() {
+    index = (index - 1 + images.length) % images.length;
+    showImage();
+}
+
+function goBack() {
+    clearInterval(interval);
+    document.getElementById("sliderPage").style.display = "none";
+    document.getElementById("welcome").style.display = "flex";
+}
+
+/* EXIT FIX */
+function exitApp() {
+    if (confirm("Are you sure you want to exit?")) {
+        document.body.innerHTML = "<h1 style='text-align:center;margin-top:40vh;'>Thank You 😊</h1>";
+    }
+}
+</script>
+
+</body>
+</html>
